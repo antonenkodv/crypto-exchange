@@ -1,23 +1,34 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {  IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { Providers } from "./currency.enum";
 
 
 export class ExchangeDto {
-  
-  @ApiProperty({ required: true })
+
+  @ApiProperty({
+    description: "Source for currency exchange",
+    required: true,
+    enum: Providers
+  })
   @IsNotEmpty()
   @IsString()
   @IsEnum(Providers)
   readonly provider: Providers;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    description: "Basic currency",
+    example : "bitcoin",
+    required: true
+  })
   @IsNotEmpty()
   @IsString()
-  readonly base : string;
+  readonly base: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    description: "Target currency",
+    example : "usd",
+    required: true })
   @IsNotEmpty()
   @IsString()
-  readonly target : string;
+  readonly target: string;
 }

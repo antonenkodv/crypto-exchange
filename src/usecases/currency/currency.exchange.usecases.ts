@@ -1,11 +1,20 @@
 import axios from "axios";
+import { EnvironmentConfigService } from "../../infrastructure/config/environment/environment.service";
+import { Providers } from "../../infrastructure/controllers/currency/currency.enum";
 
-export class CurencyExchangeUsecases {
-  constructor() {
+export type ExchangedResponse = {
+  [key: string] : {
+      [key: string]: number
+    }
+};
+
+export class CurrencyExchangeUsecases {
+  constructor(private config : EnvironmentConfigService) {
   }
 
-  async execute(): Promise<any> {
-    const result = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd");
-    return result;
+  async execute(provider , base , target): Promise<ExchangedResponse> {
+    let providerApiUrl = "";
+    if (provider === Providers.coingecko) providerApiUrl = `${this.config.getCoingeckoApiUrl()}/simple/price?ids=${base}&vs_currencies=${target}`;
+    return axios.get(providerApiUrl).then(response=>response.data);
   }
 }
